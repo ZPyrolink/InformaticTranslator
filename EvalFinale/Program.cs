@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using EvalFinale.Analyzer;
 using EvalFinale.Grammar;
 using XmlJsonManager.Xml;
 
@@ -181,9 +182,9 @@ namespace EvalFinale
 
             LoadTranslationData();
 
-            (List<string> words, List<string> lexems) = LexicalAnalysis(code);
+            (List<string> words, List<string> lexems) = Analyze.LexicalAnalysis(code, Traductor.Language.Java);
 
-            Node tree = SyntaxicAnalysis(lexems, grammar, table);
+            Node tree = Analyze.SyntaxicAnalysis(lexems, grammar, table);
 
             string codePHP = Traductor.Translate(tree, words, lexems, Traductor.Language.Java, Traductor.Language.PHP);
             string codeCS = Traductor.Translate(tree, words, lexems, Traductor.Language.Java, Traductor.Language.CS);
@@ -214,140 +215,6 @@ namespace EvalFinale
                 Traductor.Language.CS,
                 Traductor.Language.Java,
             };
-        }
-
-        private static (List<string>, List<string>) LexicalAnalysis(string code)
-        {
-            char[] separators = {' ', '\n', '\t'};
-            Dictionary<string, string> reserved = new Dictionary<string, string>
-            {
-                {"int", "type"},
-                {"bool", "type"},
-                {"true", "val"},
-                {"=", "="},
-                {";", ";"},
-                {"(", "("},
-                {")", ")"},
-                {"{", "{"},
-                {"}", "}"},
-                {"while", "while"},
-                {"if", "if"},
-                {"else", "else"},
-                {"<", "<"},
-                {">", ">"},
-                {"+", "+"},
-                {"-", "-"},
-                {"*", "*"},
-                {"/", "/"},
-                {"%", "%"},
-                {"System.out.println", "id"}
-            };
-
-            List<string> words = new List<string>();
-            List<string> lexems = new List<string>();
-
-            int i = 0;
-            string builtWord = "";
-
-            while (i < code.Length)
-            {
-                if (separators.Contains(code[i]))
-                {
-                    if (builtWord.Length != 0)
-                    {
-                        words.Add(builtWord);
-                        lexems.Add(decimal.TryParse(builtWord, out _) || bool.TryParse(builtWord, out _) ? "val" : "id");
-                    }
-
-                    builtWord = "";
-                    i++;
-                }
-                else
-                {
-                    string foundWord = null;
-                    string foundLexem = null;
-
-                    foreach (string key in reserved.Keys)
-                    {
-                        if (i + key.Length > code.Length)
-                            continue;
-
-                        if (key == code.Substring(i, key.Length))
-                        {
-                            foundWord = key;
-                            foundLexem = reserved[key];
-                            break;
-                        }
-                    }
-
-                    if (foundWord is null)
-                    {
-                        builtWord += code[i];
-                        i++;
-                    }
-                    else
-                    {
-                        if (builtWord.Length != 0)
-                        {
-                            words.Add(builtWord);
-                            lexems.Add(decimal.TryParse(builtWord, out _) || bool.TryParse(builtWord, out _) ? "val" : "id");
-                            builtWord = "";
-                        }
-
-                        words.Add(foundWord);
-                        lexems.Add(foundLexem);
-
-                        i += foundWord.Length;
-                    }
-                }
-            }
-
-            return (words, lexems);
-        }
-
-        private static Node SyntaxicAnalysis(List<string> lexems, List<Rule> rules, Dictionary<Symbol, Dictionary<Symbol, Rule>> table)
-        {
-            Symbol actual = rules[0].Left;
-
-            Node tree = new Node(actual);
-            Node node = tree.Copy();
-            int i = 0;
-            int cut = 0;
-
-            while (i < lexems.Count && cut < 1000)
-            {
-                string lexem = lexems[i];
-                Symbol lexemT = new Symbol(lexem);
-                if (actual.IsTerminal)
-                {
-                    if (actual != new Symbol("ε") && actual != lexemT)
-                        throw new Exception("My Syntax Error: " + lexemT + " instead of " + actual);
-                    
-                    if (actual == lexemT)
-                        i++;
-
-                    node = tree.Next(node);
-                    actual = node.Value;
-                }
-                else
-                {
-                    if (!table[actual].ContainsKey(lexemT))
-                        throw new Exception("My Syntax Error: no rule from " + actual);
-
-
-                    Rule rule = table[actual][lexemT];
-
-                    foreach (Symbol symbol in rule.Expression)
-                        node.AddChildren(new Node(symbol));
-                    
-                    node = node.Children[0];
-                    actual = node.Value;
-                }
-
-                cut++;
-            }
-
-            return tree;
         }
     }
 

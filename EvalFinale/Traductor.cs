@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using EvalFinale.Analyzer;
 
 namespace EvalFinale
 {
@@ -21,6 +22,17 @@ namespace EvalFinale
         public static string Translate(Node tree, List<string> words, List<string> lexems, Language original, Language traduction)
         {
             Init();
+
+            switch (original)
+            {
+                case Language.PHP:
+                case Language.CS:
+                    throw new NotImplementedException("La traduction depuis ce language n'as pas encore été implémenté !");
+                case Language.Java:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(original), original, null);
+            }
 
             return traduction switch
             {
