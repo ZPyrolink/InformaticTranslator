@@ -198,6 +198,8 @@ namespace EvalFinale
             Console.WriteLine(codeCS);
             Console.ForegroundColor = defaultColor;
 
+#if DEBUG
+
             Console.WriteLine("DEBUG : ");
             Console.WriteLine("Liste des mots :\n");
             words.Debug();
@@ -205,6 +207,9 @@ namespace EvalFinale
             lexems.Debug();
             Console.WriteLine("\nArbre des symboles :");
             Console.WriteLine(tree);
+
+            Console.ReadKey();
+#endif
         }
 
         private static void LoadTranslationData()
