@@ -1,4 +1,4 @@
-﻿namespace EvalFinale.Grammar
+﻿namespace TranslatorLibrary.Grammar
 {
     public class Symbol
     {

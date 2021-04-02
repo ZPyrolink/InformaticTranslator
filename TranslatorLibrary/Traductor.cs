@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using EvalFinale.Analyzer;
+using TranslatorLibrary.Analyzer;
 
-namespace EvalFinale
+namespace TranslatorLibrary
 {
     public static class Traductor
     {

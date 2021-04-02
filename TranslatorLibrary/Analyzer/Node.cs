@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using EvalFinale.Grammar;
+using TranslatorLibrary.Grammar;
 
-namespace EvalFinale.Analyzer
+namespace TranslatorLibrary.Analyzer
 {
     public class Node
     {

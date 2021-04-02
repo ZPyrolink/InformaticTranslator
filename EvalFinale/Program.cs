@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using EvalFinale.Analyzer;
-using EvalFinale.Grammar;
+using TranslatorLibrary;
+using TranslatorLibrary.Analyzer;
+using TranslatorLibrary.Grammar;
 using XmlJsonManager.Xml;
 
 namespace EvalFinale

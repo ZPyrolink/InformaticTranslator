@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using EvalFinale.Grammar;
+using TranslatorLibrary.Grammar;
+using static TranslatorLibrary.Traductor;
 
-using static EvalFinale.Traductor;
-
-namespace EvalFinale.Analyzer
+namespace TranslatorLibrary.Analyzer
 {
     public static class Analyze
     {
