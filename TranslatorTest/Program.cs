@@ -6,7 +6,7 @@ using TranslatorLibrary.Analyzer;
 using TranslatorLibrary.Grammar;
 using XmlJsonManager.Xml;
 
-namespace EvalFinale
+namespace TranslatorTest
 {
     class Program
     {
